@@ -1,0 +1,18 @@
+clang
+
+%c -Os -Wall -ffunction-sections -fdata-sections -mthumb -nostdlib -fsingle-precision-constant -mcpu=cortex-m7
+%cpp -fno-exceptions -felide-constructors -fno-rtti -std=gnu++14 -Os -Wall -ffunction-sections -fdata-sections -mthumb -nostdlib -fsingle-precision-constant -mcpu=cortex-m7
+
+-I/home/mike/Documents/premis/include
+-I/home/mike/Documents/premis/src
+-I/home/mike/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include/c++/5.4.1
+-I/home/mike/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include/c++/5.4.1/arm-none-eabi
+-I/home/mike/.platformio/packages/toolchain-gccarmnoneeabi/lib/gcc/arm-none-eabi/5.4.1/include
+-I/home/mike/.platformio/packages/toolchain-gccarmnoneeabi/lib/gcc/arm-none-eabi/5.4.1/include-fixed
+-I/home/mike/.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include
+
+-DF_CPU=600000000
+-DLAYOUT_US_ENGLISH
+-DPLATFORMIO=60002
+-D__IMXRT1062__
+-DARDUINO_TEENSY41
