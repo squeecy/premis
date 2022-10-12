@@ -1,5 +1,4 @@
 #include "Arduino.h"
-#define M_PI 3.14159265359
 #define EARTH_GRAVITY 9.80665
 #define RAD2DEG(x) ((x) * (180/M_PI)) /*radian to degree*/
 #define DEG2RAD(x) ((x) * (M_PI/180)) /*degree to radian*/
@@ -28,4 +27,9 @@ char tmp_str[7]; // temporary variable used in convert function
 char* convert_int16_to_str(int16_t i) { // converts int16 to string. Moreover, resulting strings will have the same length in the debug monitor.
   sprintf(tmp_str, "%6d", i);
   return tmp_str;
+}
+
+float int32tofloat(int32_t x, float place_v)
+{
+        return (float)x / place_v;
 }
