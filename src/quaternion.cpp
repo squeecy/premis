@@ -2,16 +2,6 @@
 #include "math.h"
 #include "quaternion/quaternion.h"
 
-struct Quaternion_s
-{
-        float w, x, y, z;
-};
-
-struct Euler_Angles_s
-{
-        float q[4] = {1.0, 0.0, 0.0, 0.0};
-        float yaw, pitch, roll;
-};
 
 
 float Kp = 30.0;
@@ -20,9 +10,9 @@ float Ki = 0.0;
 //From https://forum.arduino.cc/t/getting-quaternion-values-from-mpu6050/668823/2
 
 Euler_Angles_t *  Mahony_update(float ax, float ay, float az, float gx, float gy, float gz, 
-                float deltat, Euler_Angles_t *eul_ang) 
+                float deltat) 
 {
-  Quaternion_t *q;
+  Euler_Angles_t *eul_ang = calloc(sizeof (*eul_ang), 1);
 
   float recipNorm;
   float vx, vy, vz;
@@ -91,9 +81,11 @@ Euler_Angles_t *  Mahony_update(float ax, float ay, float az, float gx, float gy
   return eul_ang;
 }
 
-Quaternion_t * Euler_2_Quaternion(double yaw, double pitch, double roll)
+Quaternion_t *Euler_2_Quaternion(double yaw, double pitch, double roll)
 {
-        Quaternion_t *q = (Quaternion_t *) calloc(1, sizeof(*q));
+
+		//Euler_Angles_t *eul_ang = calloc(sizeof (*eul_ang), 1);
+        Quaternion_t *q = calloc(sizeof (*q), 1);
         double cy,sy,cp,sp,cr,sr;
 
         cy = cos(yaw/2.0);
@@ -108,7 +100,7 @@ Quaternion_t * Euler_2_Quaternion(double yaw, double pitch, double roll)
         q->y = cr * sp * cy + sr * cp * sy;
         q->z = cr * cp * sy - sr * sp * cy;
 
-        return (q);
+        return q;
 }
 
 
@@ -119,27 +111,26 @@ Quaternion_t * Euler_2_Quaternion(double yaw, double pitch, double roll)
  * q2 -> qy
  * q3 -> qz
  */
-Euler_Angles_t *  Quaternion_2_Euler(Quaternion q)
+Euler_Angles_t *  Quaternion_2_Euler(Euler_Angles_t *angle)
 {
-        Euler_Angles angle;
 
         //yaw
-        double sin_yaw = 2.0 * (angle.q[0] * angle.q[1] + angle.q[2] * angle.q[3]);
-        double cos_yaw = 1.0 - 2.0 * (pow(angle.q[1], 2) + pow(angle.q[2], 2));
-        angle.yaw = -atan2(sin_yaw, cos_yaw);
+        double sin_yaw = 2.0 * (angle->q[0] * angle->q[1] + angle->q[2] * angle->q[3]);
+        double cos_yaw = 1.0 - 2.0 * (pow(angle->q[1], 2) + pow(angle->q[2], 2));
+        angle->yaw = -atan2(sin_yaw, cos_yaw);
         
         //pitch
-        double sinp = 2.0 * (angle.q[0] * angle.q[2] - angle.q[3] * angle.q[1]);
+        double sinp = 2.0 * (angle->q[0] * angle->q[2] - angle->q[3] * angle->q[1]);
         //protect against over rotation
         if(abs(sinp) >= 1)
-                angle.pitch = copysign(M_PI/2.0, sinp);
+                angle->pitch = copysign(M_PI/2.0, sinp);
         else
-                angle.pitch = asin(sinp);
+                angle->pitch = asin(sinp);
 
         //roll
-        double sinr = 2.0 * (angle.q[0]* angle.q[1] + angle.q[2] * angle.q[3]);
-        double cosr = 1.0 - 2.0 * (pow(angle.q[1] , 2) + pow(angle.q[2], 2));
-        angle.roll = atan2(sinr,cosr);
+        double sinr = 2.0 * (angle->q[0]* angle->q[1] + angle->q[2] * angle->q[3]);
+        double cosr = 1.0 - 2.0 * (pow(angle->q[1] , 2) + pow(angle->q[2], 2));
+        angle->roll = atan2(sinr,cosr);
 
         return angle;
 }

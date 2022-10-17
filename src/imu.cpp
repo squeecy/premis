@@ -1,11 +1,6 @@
 #include "imu/accel.h"
+#include "quaternion/quaternion.h"
 
-struct MPU_s
-{
-  int16_t ax, ay, az;
-  int16_t gx, gy, gz;
-  int16_t tmp;
-};
 
 void mpu_setup()
 {
@@ -18,10 +13,10 @@ void mpu_setup()
   Wire1.endTransmission(true);
 }
 
-void mpu_data_raw(mpu_t *mpu_60)
+void mpu_data_raw()
 {
 
-
+  MPU_t *mpu_60 = &mpu;
   
 
   Wire1.beginTransmission(mpu_serial_addr);
@@ -44,9 +39,10 @@ void mpu_data_raw(mpu_t *mpu_60)
 }
 
 
-void mpu_data_loop(mpu_t *mpu_60, Euler_Angles_t *eul_ang)
+void mpu_data_loop(Euler_Angles_t *eul_ang)
 {
   Quaternion_t *q;
+  MPU_t *mpu_60 = &mpu;
 
   static unsigned long now = 0, last = 0;
 
@@ -73,29 +69,25 @@ void mpu_data_loop(mpu_t *mpu_60, Euler_Angles_t *eul_ang)
   deltat = (now - last) * 1.0e-6;
   last = now;
 
-  Mahony_update(Axyz[0], Axyz[1], Axyz[2], Gxyz[0], Gxyz[1], Gxyz[2], deltat, 
-                      eul_ang);
+  Mahony_update(Axyz[0], Axyz[1], Axyz[2], Gxyz[0], Gxyz[1], Gxyz[2], deltat);
 
   Quaternion_2_Euler(q);
 }
-
-
-
 
 /*
  * detect a change in acceleration 
  * within the y direction
  */
 
-void mpu_data_print()
+void mpu_data_print(Euler_Angles_t *euler_ang)
 {
-  mpu_t *mpu_60;
-  mpu_data_loop(mpu_60);
+
+	
+  mpu_data_loop(euler_ang);
 
   static unsigned long now = 0, last = 0;
   now_ms = millis();
 
-  Euler_Angles_t *euler_ang;
 
   /*Serial.print("aX = "); Serial.print(mpu.accel_ang_x);
   Serial.print("ang_aX = "); Serial.print(x);
@@ -118,8 +110,5 @@ void mpu_data_print()
                 Serial.print(", ");
                 Serial.println(euler_ang->roll, 0);
         }
-  
-
-  
 }
 

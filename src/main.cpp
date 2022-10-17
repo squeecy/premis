@@ -5,7 +5,13 @@ void setup() {
   mpu_setup();
 }
 void loop() {
-  mpu_data_print();
+  MPU_t mpu_60;
+  Euler_Angles_t euler_ang;
+
+  MPU_t *mpuptr = &mpu_60;
+  Euler_Angles_t *eulptr = &euler_ang;
+
+  mpu_data_print(eulptr);
 
 
 

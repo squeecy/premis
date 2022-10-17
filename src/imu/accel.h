@@ -6,6 +6,15 @@
 //#include "helper/helper.h"
 #include "Wire.h"
 
+
+typedef struct 
+{
+  int16_t ax, ay, az;
+  int16_t gx, gy, gz;
+  int16_t tmp;
+}MPU_t;
+
+static MPU_t mpu;
 const int mpu_serial_addr = 0x68; // I2C address of the MPU-6050. If AD0 pin is set to HIGH, the I2C address will be 0x69.
 
 
@@ -22,8 +31,8 @@ static float G_off[3] = {-499.5, -17.7, -82.0};
 
 typedef struct MPU_s mpu_t;
 void mpu_setup();
-void mpu_data_raw(mpu_t *mpu_60);
-void mpu_data_loop(mpu_t *mpu_60);
-void mpu_data_print();
+void mpu_data_raw();
+void mpu_data_loop(Euler_Angles_t *eul_ang);
+void mpu_data_print(Euler_Angles_t *euler_ang);
 
 #endif
