@@ -1,8 +1,8 @@
 #ifndef ACCEL_H
 #define ACCEL_H
-#include "filter/lowpass.h"
-#include "filter/kalman.h"
-#include "quaternion/quaternion.h"
+#include "lowpass.h"
+#include "kalman.h"
+#include "quaternion.h"
 //#include "helper/helper.h"
 #include "Wire.h"
 

@@ -1,7 +1,7 @@
 #ifndef KALMAN_H
 #define KALMAN_H
 
-#include "global/global.h"
+#include "global.h"
 #include "math.h"
 #include "BasicLinearAlgebra.h"
 #define CONFIG_FILE_FILTER "src/filter/filter.txt"

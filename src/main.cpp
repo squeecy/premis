@@ -1,4 +1,4 @@
-#include "imu/accel.h"
+#include "accel.h"
 
 void setup() {
   Serial.begin(9600);

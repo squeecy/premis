@@ -17,7 +17,7 @@ typedef struct
 //Euler_Angles_t  *euler_ang = &Euler_Angles_t;
 
 Euler_Angles_t *Mahony_update(float,float,float,float,float,float,float); 
-Quaternion_t *Euler_2_Quaternion(double,double,double);
+extern Quaternion_t *Euler_2_Quaternion(double,double,double);
 Euler_Angles_t Quaternion_2_Euler(Quaternion_t *q);
 
 #endif

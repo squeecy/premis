@@ -1,5 +1,5 @@
-#include "imu/accel.h"
-#include "quaternion/quaternion.h"
+#include "accel.h"
+#include "quaternion.h"
 
 
 void mpu_setup()

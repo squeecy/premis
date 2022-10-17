@@ -1,4 +1,4 @@
-#include "filter/kalman.h"
+#include "kalman.h"
 
 static 
 void variableUpdate()
