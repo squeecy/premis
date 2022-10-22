@@ -10,8 +10,19 @@ using System.IO;
 namespace premisTelemetry
 {
 
+    class WeatherParse
+    {
+        public class Altimeter 
+        {
+            public double altimeter{ get; set; }
+        }
+    }
+
     public class Weather_Metar
     {
+
+
+
 
         const string wxFilePath = @"wx.txt";
         static string wxName;

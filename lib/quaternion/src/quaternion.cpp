@@ -111,7 +111,7 @@ Quaternion_t *Euler_2_Quaternion(double yaw, double pitch, double roll)
  * q2 -> qy
  * q3 -> qz
  */
-extern Euler_Angles_t *  Quaternion_2_Euler(Euler_Angles_t *angle)
+Euler_Angles_t *Quaternion_2_Euler(Euler_Angles_t *angle)
 {
 
         //yaw

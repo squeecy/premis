@@ -1,5 +1,6 @@
 #include "accel.h"
 #include "quaternion.h"
+#include "quaternion.cpp"
 
 
 void mpu_setup()
@@ -71,7 +72,7 @@ void mpu_data_loop(Euler_Angles_t *eul_ang)
 
   Mahony_update(Axyz[0], Axyz[1], Axyz[2], Gxyz[0], Gxyz[1], Gxyz[2], deltat);
 
-  Quaternion_2_Euler(q);
+  Quaternion_2_Euler(eul_ang);
 }
 
 /*
