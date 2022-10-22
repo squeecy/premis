@@ -1,0 +1,13 @@
+git add .
+
+git commit -m " "
+
+git push
+
+
+updating from server - *WILL NUKE ANY LOCAL CHANGES, CAREFUL*
+
+git reset --hard HEAD
+git clean -xffd
+git pull
+
