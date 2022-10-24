@@ -1,6 +1,6 @@
 ﻿namespace premisTelemetry
 {
-    partial class Form1
+    partial class global
     {
         /// <summary>
         /// Required designer variable.
@@ -34,8 +34,8 @@
             this.TelemetryView_Button = new System.Windows.Forms.Button();
             this.StageView_Button = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.userControl21 = new premisTelemetry.UserControl2();
-            this.userControl11 = new premisTelemetry.UserControl1();
+            this.userControl21 = new premisTelemetry.stageview();
+            this.userControl11 = new premisTelemetry.telemetry();
             this.settings1 = new premisTelemetry.settings();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -155,8 +155,8 @@
         private System.Windows.Forms.Button TelemetryView_Button;
         private System.Windows.Forms.Button StageView_Button;
         private System.Windows.Forms.Panel panel4;
-        private UserControl1 userControl11;
-        private UserControl2 userControl21;
+        private telemetry userControl11;
+        private stageview userControl21;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button Settings_Button;
         private settings settings1;

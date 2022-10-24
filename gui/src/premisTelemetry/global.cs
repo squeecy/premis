@@ -10,12 +10,13 @@ using System.Windows.Forms;
 using rtChart;
 using System.IO.Ports;
 using System.IO;
+using System.Diagnostics;
 
 namespace premisTelemetry
 {
-    public partial class Form1 : Form
+    public partial class global : Form
     {
-        public Form1()
+        public global()
         {
             InitializeComponent();
         }
@@ -42,7 +43,9 @@ namespace premisTelemetry
             userControl11.Show();
             userControl11.BringToFront();
             //readFile(wxName, wxFilePath);
+
         }
+
 
 
 

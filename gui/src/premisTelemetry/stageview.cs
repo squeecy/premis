@@ -13,7 +13,7 @@ using System.Net.Http;
 
 namespace premisTelemetry
 {
-    public partial class UserControl2 : UserControl
+    public partial class stageview : UserControl
     {
 
         readonly SerialPort sp = new SerialPort();
@@ -27,7 +27,7 @@ namespace premisTelemetry
             }
         }
 
-        public UserControl2()
+        public stageview()
         {
             InitializeComponent();
             //DeviceState();

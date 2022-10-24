@@ -1,6 +1,6 @@
 ﻿namespace premisTelemetry
 {
-    partial class UserControl2
+    partial class stageview
     {
         /// <summary> 
         /// Required designer variable.
