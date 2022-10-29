@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1C90C937-CA61-4DF9-85F0-FACD627E0F16}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>premisTelemetry</RootNamespace>
     <AssemblyName>premisTelemetry</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -31,6 +31,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="kayChart, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -81,6 +84,7 @@
     <Compile Include="settings.Designer.cs">
       <DependentUpon>settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="teensy.cs" />
     <Compile Include="telemetry.cs">
       <SubType>UserControl</SubType>
     </Compile>

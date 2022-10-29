@@ -53,6 +53,7 @@ namespace premisTelemetry
         //Close the application
         private void button3_Click(object sender, EventArgs e)
         {
+            Teensy.sp.Close();  
             Close();
         }
 
@@ -65,6 +66,18 @@ namespace premisTelemetry
             settings1.Show();
             settings1.BringToFront();
 
+
+        }
+
+        const string wxFilePath = @"wx.txt";
+        static string wxName;
+
+        static private string readFile(string outlist, string filePath)
+        {
+            outlist = File.ReadLines(filePath).First();
+            Console.ReadLine();
+
+            return outlist;
 
         }
     }

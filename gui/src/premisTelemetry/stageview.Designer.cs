@@ -46,6 +46,7 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.StateTitle = new System.Windows.Forms.Label();
+            this.serial_string = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.State_Panel.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -174,17 +175,27 @@
             this.StateTitle.TabIndex = 5;
             this.StateTitle.Text = "Premis";
             // 
-            // UserControl2
+            // serial_string
+            // 
+            this.serial_string.AutoSize = true;
+            this.serial_string.Location = new System.Drawing.Point(716, 164);
+            this.serial_string.Name = "serial_string";
+            this.serial_string.Size = new System.Drawing.Size(35, 13);
+            this.serial_string.TabIndex = 6;
+            this.serial_string.Text = "label1";
+            // 
+            // stageview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(67)))), ((int)(((byte)(112)))));
+            this.Controls.Add(this.serial_string);
             this.Controls.Add(this.StateTitle);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.backGround_Panel);
-            this.Name = "UserControl2";
+            this.Name = "stageview";
             this.Size = new System.Drawing.Size(1081, 738);
             this.panel1.ResumeLayout(false);
             this.State_Panel.ResumeLayout(false);
@@ -213,5 +224,6 @@
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label StateTitle;
+        private System.Windows.Forms.Label serial_string;
     }
 }

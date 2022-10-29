@@ -28,11 +28,11 @@ namespace premisTelemetry
 
         private void metarEnter_Click(object sender, EventArgs e)
         {
-            //Console.WriteLine(Metar_Setting_TextBox.Text);
             GetMetarText();
 
             Weather_Metar weather = new Weather_Metar();
             Weather_Metar.callWXAPI(GetMetarText());
+
         }
     }
 }

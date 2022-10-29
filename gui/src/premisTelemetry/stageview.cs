@@ -16,23 +16,10 @@ namespace premisTelemetry
     public partial class stageview : UserControl
     {
 
-        readonly SerialPort sp = new SerialPort();
-        bool DeviceConnected = false;
-
-        private void DeviceState()
-        {
-            if (!DeviceConnected)
-            {
-                timer1.Start();
-            }
-        }
-
         public stageview()
         {
             InitializeComponent();
-            //DeviceState();
         }
-
 
         private async void SoftBlink(Control ctrl, Color c1, Color c2, short CycleTime_ms, bool BkClr)
         {
@@ -51,46 +38,23 @@ namespace premisTelemetry
             }
         }
 
-
-        private void TeensyInit()
-        {
-            sp.PortName = "COM3";
-            sp.BaudRate = 9600;
-            sp.Open();
-            DeviceConnected = true;
-
-        }
-
         private void Connect_Button_Click(object sender, EventArgs e)
         {
+            //Console.WriteLine($"info is: {teensy.info}");
 
-            try
+            Teensy.TeensyInit();
+            //serial_string.Text = Teensy.serialReceiver();
+
+
+            if (Teensy.DeviceConnected)
             {
-                TeensyInit();
-                if (DeviceConnected)
-                {
-                    State_Panel.ForeColor = Color.Green;
-                    backGround_Panel.BackColor = Color.Green;
-                    StageUpdate_Label.Text = "Connected";
-                    
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                MessageBox.Show("The Port is Busy", "Busy", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
-            catch (NullReferenceException)
-            {
-                MessageBox.Show("There is no serial port", "Empty", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
+                State_Panel.ForeColor = Color.Green;
+                backGround_Panel.BackColor = Color.Green;
+                StageUpdate_Label.Text = "Connected";
             }
 
-            if (!DeviceConnected)
+            if (!Teensy.DeviceConnected)
             {
-                //timer1.Start();
                 SoftBlink(State_Panel, Color.FromArgb(255, 159, 19), Color.Red, 2000, true);
                 StageUpdate_Label.Text = "Looking For Device";
                 Console.WriteLine("Button has been clicked");

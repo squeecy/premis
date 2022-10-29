@@ -29,11 +29,12 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.metarEnter = new System.Windows.Forms.Button();
+            this.Metar_Setting_TextBox = new System.Windows.Forms.TextBox();
             this.State_Panel = new System.Windows.Forms.Panel();
             this.METAR_SETTING_Label = new System.Windows.Forms.Label();
             this.backGround_Panel = new System.Windows.Forms.Panel();
-            this.Metar_Setting_TextBox = new System.Windows.Forms.TextBox();
-            this.metarEnter = new System.Windows.Forms.Button();
+            this.test_label = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.State_Panel.SuspendLayout();
             this.SuspendLayout();
@@ -47,6 +48,24 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(342, 172);
             this.panel1.TabIndex = 3;
+            // 
+            // metarEnter
+            // 
+            this.metarEnter.Location = new System.Drawing.Point(136, 146);
+            this.metarEnter.Name = "metarEnter";
+            this.metarEnter.Size = new System.Drawing.Size(75, 23);
+            this.metarEnter.TabIndex = 2;
+            this.metarEnter.Text = "enter";
+            this.metarEnter.UseVisualStyleBackColor = true;
+            this.metarEnter.Click += new System.EventHandler(this.metarEnter_Click);
+            // 
+            // Metar_Setting_TextBox
+            // 
+            this.Metar_Setting_TextBox.Location = new System.Drawing.Point(90, 93);
+            this.Metar_Setting_TextBox.Name = "Metar_Setting_TextBox";
+            this.Metar_Setting_TextBox.Size = new System.Drawing.Size(155, 20);
+            this.Metar_Setting_TextBox.TabIndex = 1;
+            this.Metar_Setting_TextBox.TextChanged += new System.EventHandler(this.Metar_Setting_TextBox_TextChanged);
             // 
             // State_Panel
             // 
@@ -75,29 +94,21 @@
             this.backGround_Panel.Size = new System.Drawing.Size(348, 178);
             this.backGround_Panel.TabIndex = 4;
             // 
-            // Metar_Setting_TextBox
+            // test_label
             // 
-            this.Metar_Setting_TextBox.Location = new System.Drawing.Point(90, 93);
-            this.Metar_Setting_TextBox.Name = "Metar_Setting_TextBox";
-            this.Metar_Setting_TextBox.Size = new System.Drawing.Size(155, 20);
-            this.Metar_Setting_TextBox.TabIndex = 1;
-            this.Metar_Setting_TextBox.TextChanged += new System.EventHandler(this.Metar_Setting_TextBox_TextChanged);
-            // 
-            // metarEnter
-            // 
-            this.metarEnter.Location = new System.Drawing.Point(136, 146);
-            this.metarEnter.Name = "metarEnter";
-            this.metarEnter.Size = new System.Drawing.Size(75, 23);
-            this.metarEnter.TabIndex = 2;
-            this.metarEnter.Text = "enter";
-            this.metarEnter.UseVisualStyleBackColor = true;
-            this.metarEnter.Click += new System.EventHandler(this.metarEnter_Click);
+            this.test_label.AutoSize = true;
+            this.test_label.Location = new System.Drawing.Point(640, 226);
+            this.test_label.Name = "test_label";
+            this.test_label.Size = new System.Drawing.Size(35, 13);
+            this.test_label.TabIndex = 5;
+            this.test_label.Text = "label1";
             // 
             // settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(67)))), ((int)(((byte)(112)))));
+            this.Controls.Add(this.test_label);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.backGround_Panel);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -107,6 +118,7 @@
             this.panel1.PerformLayout();
             this.State_Panel.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -118,5 +130,6 @@
         private System.Windows.Forms.Label METAR_SETTING_Label;
         private System.Windows.Forms.Panel backGround_Panel;
         private System.Windows.Forms.Button metarEnter;
+        private System.Windows.Forms.Label test_label;
     }
 }

@@ -12,7 +12,10 @@ float Ki = 0.0;
 Euler_Angles_t *  Mahony_update(float ax, float ay, float az, float gx, float gy, float gz, 
                 float deltat) 
 {
-  Euler_Angles_t *eul_ang = calloc(sizeof (*eul_ang), 1);
+  //Euler_Angles_t *eul_ang = calloc(sizeof (*eul_ang), 1);
+  Euler_Angles_t eul;
+
+  Euler_Angles_t *eul_ang = &eul;
 
   float recipNorm;
   float vx, vy, vz;
@@ -85,7 +88,9 @@ Quaternion_t *Euler_2_Quaternion(double yaw, double pitch, double roll)
 {
 
 		//Euler_Angles_t *eul_ang = calloc(sizeof (*eul_ang), 1);
-        Quaternion_t *q = calloc(sizeof (*q), 1);
+        //Quaternion_t *q = calloc(sizeof (*q), 1);
+		Quaternion_t qua;
+		Quaternion_t *q = &qua;
         double cy,sy,cp,sp,cr,sr;
 
         cy = cos(yaw/2.0);
@@ -111,8 +116,10 @@ Quaternion_t *Euler_2_Quaternion(double yaw, double pitch, double roll)
  * q2 -> qy
  * q3 -> qz
  */
-Euler_Angles_t *Quaternion_2_Euler(Euler_Angles_t *angle)
+Euler_Angles_t *Quaternion_2_Euler()
 {
+		Euler_Angles_t eul;
+		Euler_Angles_t *angle = &eul;
 
         //yaw
         double sin_yaw = 2.0 * (angle->q[0] * angle->q[1] + angle->q[2] * angle->q[3]);

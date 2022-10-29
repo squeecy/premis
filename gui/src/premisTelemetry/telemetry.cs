@@ -31,8 +31,6 @@ namespace premisTelemetry
             Task.Factory.StartNew(() =>
             {
                 cpuData.updateChart(updateWithCPU, 10);
-               
-
             });
         }
 
