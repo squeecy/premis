@@ -111,6 +111,7 @@
             chartArea2.BackColor = System.Drawing.Color.Transparent;
             chartArea2.Name = "ChartArea1";
             this.chart2.ChartAreas.Add(chartArea2);
+            legend2.Enabled = false;
             legend2.Name = "Legend1";
             this.chart2.Legends.Add(legend2);
             this.chart2.Location = new System.Drawing.Point(15, 32);
@@ -121,7 +122,7 @@
             series2.Name = "Series1";
             series2.YValuesPerPoint = 4;
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(582, 259);
+            this.chart2.Size = new System.Drawing.Size(507, 259);
             this.chart2.TabIndex = 2;
             this.chart2.Text = "chart1";
             // 

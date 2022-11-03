@@ -9,16 +9,23 @@ using System.IO;
 
 namespace premisTelemetry
 {
-
+    public struct metarReturn
+    {
+        public string local_Altimeter { get; set; }
+        public string local_Temperature { get; set; }
+        public string local_DewPoint { get; set; }
+        public string local_WindDirection { get; set; }
+        public string local_WindSpeed { get; set; }
+        public string total_Wind { get; set; }
+    }
 
     public class Weather_Metar
     {
-
-
         //holds our parsed JSON data and makes it global
-        static public string local_Altimeter;
-        static public string local_Temperature;
-        static public string local_DewPoint;
+
+        static public metarReturn metar_s = new metarReturn();
+
+
 
         //Class to call back and parse our JSON
         public class Altimeter
@@ -184,9 +191,16 @@ namespace premisTelemetry
                     Root parseClass = JsonConvert.DeserializeObject<Root>(responseData); // convert the JSON to something readable
 
                     //repr -> report
-                    local_Altimeter = parseClass.altimeter.repr;
-                    local_Temperature = parseClass.temperature.repr;
-                    local_DewPoint = parseClass.dewpoint.repr;
+                    metar_s.local_Altimeter = parseClass.altimeter.repr;
+                    metar_s.local_Temperature = parseClass.temperature.repr;
+                    metar_s.local_DewPoint = parseClass.dewpoint.repr;
+                    metar_s.local_WindDirection = parseClass.wind_direction.repr;
+                    metar_s.local_WindSpeed = parseClass.wind_speed.repr;
+                    metar_s.total_Wind = $"{metar_s.local_WindDirection} / {metar_s.local_WindSpeed}";
+
+                    //metarReturn.Add(metar);
+
+                    Console.WriteLine(metar_s.local_Altimeter);
                 }
             }
         }

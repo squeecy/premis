@@ -69,6 +69,7 @@ namespace premisTelemetry
 
         }
 
+        /*
         const string wxFilePath = @"wx.txt";
         static string wxName;
 
@@ -80,5 +81,6 @@ namespace premisTelemetry
             return outlist;
 
         }
+        */
     }
 }

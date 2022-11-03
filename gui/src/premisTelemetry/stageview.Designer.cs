@@ -46,10 +46,17 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.StateTitle = new System.Windows.Forms.Label();
-            this.serial_string = new System.Windows.Forms.Label();
+            this.altimeterLabel = new System.Windows.Forms.Label();
+            this.temperatureLabel = new System.Windows.Forms.Label();
+            this.dewpointLabel = new System.Windows.Forms.Label();
+            this.totalwindLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.panel17 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.State_Panel.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel10.SuspendLayout();
             this.SuspendLayout();
             // 
             // StageUpdate_Label
@@ -66,7 +73,7 @@
             // 
             this.panel1.Controls.Add(this.Connect_Button);
             this.panel1.Controls.Add(this.State_Panel);
-            this.panel1.Location = new System.Drawing.Point(4, 161);
+            this.panel1.Location = new System.Drawing.Point(4, 176);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(342, 238);
             this.panel1.TabIndex = 1;
@@ -93,7 +100,7 @@
             // backGround_Panel
             // 
             this.backGround_Panel.BackColor = System.Drawing.Color.White;
-            this.backGround_Panel.Location = new System.Drawing.Point(1, 158);
+            this.backGround_Panel.Location = new System.Drawing.Point(1, 173);
             this.backGround_Panel.Name = "backGround_Panel";
             this.backGround_Panel.Size = new System.Drawing.Size(348, 244);
             this.backGround_Panel.TabIndex = 2;
@@ -175,31 +182,94 @@
             this.StateTitle.TabIndex = 5;
             this.StateTitle.Text = "Premis";
             // 
-            // serial_string
+            // altimeterLabel
             // 
-            this.serial_string.AutoSize = true;
-            this.serial_string.Location = new System.Drawing.Point(716, 164);
-            this.serial_string.Name = "serial_string";
-            this.serial_string.Size = new System.Drawing.Size(35, 13);
-            this.serial_string.TabIndex = 6;
-            this.serial_string.Text = "label1";
+            this.altimeterLabel.AutoSize = true;
+            this.altimeterLabel.Font = new System.Drawing.Font("Zorque", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.altimeterLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.altimeterLabel.Location = new System.Drawing.Point(25, 51);
+            this.altimeterLabel.Name = "altimeterLabel";
+            this.altimeterLabel.Size = new System.Drawing.Size(147, 19);
+            this.altimeterLabel.TabIndex = 7;
+            this.altimeterLabel.Text = "No WX Available";
+            // 
+            // temperatureLabel
+            // 
+            this.temperatureLabel.AutoSize = true;
+            this.temperatureLabel.Font = new System.Drawing.Font("Zorque", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.temperatureLabel.Location = new System.Drawing.Point(108, 61);
+            this.temperatureLabel.Name = "temperatureLabel";
+            this.temperatureLabel.Size = new System.Drawing.Size(0, 19);
+            this.temperatureLabel.TabIndex = 8;
+            // 
+            // dewpointLabel
+            // 
+            this.dewpointLabel.AutoSize = true;
+            this.dewpointLabel.Font = new System.Drawing.Font("Zorque", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dewpointLabel.Location = new System.Drawing.Point(108, 86);
+            this.dewpointLabel.Name = "dewpointLabel";
+            this.dewpointLabel.Size = new System.Drawing.Size(0, 19);
+            this.dewpointLabel.TabIndex = 9;
+            // 
+            // totalwindLabel
+            // 
+            this.totalwindLabel.AutoSize = true;
+            this.totalwindLabel.Font = new System.Drawing.Font("Zorque", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.totalwindLabel.Location = new System.Drawing.Point(108, 111);
+            this.totalwindLabel.Name = "totalwindLabel";
+            this.totalwindLabel.Size = new System.Drawing.Size(0, 19);
+            this.totalwindLabel.TabIndex = 10;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Unispace", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(48, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(89, 19);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Weather:";
+            // 
+            // panel10
+            // 
+            this.panel10.Controls.Add(this.totalwindLabel);
+            this.panel10.Controls.Add(this.label1);
+            this.panel10.Controls.Add(this.dewpointLabel);
+            this.panel10.Controls.Add(this.altimeterLabel);
+            this.panel10.Controls.Add(this.temperatureLabel);
+            this.panel10.Location = new System.Drawing.Point(21, 15);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(197, 133);
+            this.panel10.TabIndex = 12;
+            // 
+            // panel17
+            // 
+            this.panel17.BackColor = System.Drawing.Color.White;
+            this.panel17.Location = new System.Drawing.Point(23, 12);
+            this.panel17.Name = "panel17";
+            this.panel17.Size = new System.Drawing.Size(195, 139);
+            this.panel17.TabIndex = 13;
             // 
             // stageview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(67)))), ((int)(((byte)(112)))));
-            this.Controls.Add(this.serial_string);
             this.Controls.Add(this.StateTitle);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.backGround_Panel);
+            this.Controls.Add(this.panel10);
+            this.Controls.Add(this.panel17);
             this.Name = "stageview";
             this.Size = new System.Drawing.Size(1081, 738);
+            this.Load += new System.EventHandler(this.stageview_Load);
             this.panel1.ResumeLayout(false);
             this.State_Panel.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,6 +294,12 @@
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label StateTitle;
-        private System.Windows.Forms.Label serial_string;
+        private System.Windows.Forms.Label temperatureLabel;
+        private System.Windows.Forms.Label dewpointLabel;
+        private System.Windows.Forms.Label altimeterLabel;
+        private System.Windows.Forms.Label totalwindLabel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Panel panel17;
     }
 }

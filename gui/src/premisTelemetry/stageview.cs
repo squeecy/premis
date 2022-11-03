@@ -16,10 +16,21 @@ namespace premisTelemetry
     public partial class stageview : UserControl
     {
 
+        public static stageview instance;
+        public Label altimeterLabel_p, temperatureLabel_p, dewpointLabel_p, totalwindLabel_p;
+        public PictureBox weatherPicBox_p;
         public stageview()
         {
             InitializeComponent();
+            instance = this;
+            altimeterLabel_p = altimeterLabel;
+            temperatureLabel_p = temperatureLabel;
+            dewpointLabel_p = dewpointLabel;
+            totalwindLabel_p = totalwindLabel;
         }
+
+
+
 
         private async void SoftBlink(Control ctrl, Color c1, Color c2, short CycleTime_ms, bool BkClr)
         {
@@ -40,11 +51,7 @@ namespace premisTelemetry
 
         private void Connect_Button_Click(object sender, EventArgs e)
         {
-            //Console.WriteLine($"info is: {teensy.info}");
-
             Teensy.TeensyInit();
-            //serial_string.Text = Teensy.serialReceiver();
-
 
             if (Teensy.DeviceConnected)
             {
@@ -58,12 +65,14 @@ namespace premisTelemetry
                 SoftBlink(State_Panel, Color.FromArgb(255, 159, 19), Color.Red, 2000, true);
                 StageUpdate_Label.Text = "Looking For Device";
                 Console.WriteLine("Button has been clicked");
+
             }
-            
         }
 
+        private void stageview_Load(object sender, EventArgs e)
+        {
+            //temperatureLabel.Text = stdName;
 
-
-
+        }
     }
 }
