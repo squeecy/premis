@@ -51,6 +51,7 @@ namespace premisTelemetry
 
         private void Connect_Button_Click(object sender, EventArgs e)
         {
+            Teensy teensy = new Teensy();
             Teensy.TeensyInit();
 
             if (Teensy.DeviceConnected)
@@ -58,6 +59,7 @@ namespace premisTelemetry
                 State_Panel.ForeColor = Color.Green;
                 backGround_Panel.BackColor = Color.Green;
                 StageUpdate_Label.Text = "Connected";
+                test_tel.Text = teensy.TeensyData;
             }
 
             if (!Teensy.DeviceConnected)

@@ -1,16 +1,17 @@
 #include "accel.h"
 
 void setup() {
-  Serial.begin(9600);
   configure();
   //mpu_setup();
 }
 void loop() {
 
-  mpu_loop(mpu_x);
+  mpu_T MPU;
+
+  mpu_loop();
 
 
 
 
-  delay(500);
+  delay(100);
 }

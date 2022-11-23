@@ -9,21 +9,25 @@ float Ki = 0.0;
 
 //From https://forum.arduino.cc/t/getting-quaternion-values-from-mpu6050/668823/2
 
-Euler_Angles_t *  Mahony_update(float ax, float ay, float az, float gx, float gy, float gz, 
-                float deltat) 
+void Mahony_update(float ax, float ay, float az, float gx, float gy, float gz, 
+                float deltat, Quaternion_t *qua) 
 {
-  //Euler_Angles_t *eul_ang = calloc(sizeof (*eul_ang), 1);
-  Euler_Angles_t eul;
+  //eul_ang = (struct Euler_Angles_t*)
+	  //malloc(sizeof(struct Euler_Angles_t));
 
-  Euler_Angles_t *eul_ang = &eul;
+  //Euler_Angles_t *eul_ang = calloc(sizeof (*eul_ang), 1);
+  //Euler_Angles_t eul;
+
+  //Euler_Angles_t *eul_ang = &eul;
 
   float recipNorm;
   float vx, vy, vz;
-  float ex, ey, ez;  //error terms
+  float ex, ey, ez;  //error termyaws
   float qa, qb, qc;
   static float ix = 0.0, iy = 0.0, iz = 0.0;  //integral feedback terms
   float tmp;
 
+  //Serial.println(deltat);
   // Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
   tmp = ax * ax + ay * ay + az * az;
   if (tmp > 0.0)
@@ -36,9 +40,9 @@ Euler_Angles_t *  Mahony_update(float ax, float ay, float az, float gx, float gy
     az *= recipNorm;
 
     // Estimated direction of gravity in the body frame (factor of two divided out)
-    vx = eul_ang->q[1] * eul_ang->q[3] - eul_ang->q[0] * eul_ang->q[2];
-    vy = eul_ang->q[0] * eul_ang->q[1] + eul_ang->q[2] * eul_ang->q[3];
-    vz = eul_ang->q[0] * eul_ang->q[0] - 0.5f + eul_ang->q[3] * eul_ang->q[3];
+    vx = qua->q[1] * qua->q[3] - qua->q[0] * qua->q[2];
+    vy = qua->q[0] * qua->q[1] + qua->q[2] * qua->q[3];
+    vz = qua->q[0] * qua->q[0] - 0.5f + qua->q[3] * qua->q[3];
 // Error is cross product between estimated and measured direction of gravity in body frame
     // (half the actual magnitude)
     ex = (ay * vz - az * vy);
@@ -66,31 +70,29 @@ Euler_Angles_t *  Mahony_update(float ax, float ay, float az, float gx, float gy
   gx *= deltat;   // pre-multiply common factors
   gy *= deltat;
   gz *= deltat;
-  qa = eul_ang->q[0];
-  qb = eul_ang->q[1];
-  qc = eul_ang->q[2];
-  eul_ang->q[0] += (-qb * gx - qc * gy - eul_ang->q[3] * gz);
-  eul_ang->q[1] += (qa * gx + qc * gz - eul_ang->q[3] * gy);
-  eul_ang->q[2] += (qa * gy - qb * gz + eul_ang->q[3] * gx);
-  eul_ang->q[3] += (qa * gz + qb * gy - qc * gx);
+  qa = qua->q[0];
+  qb = qua->q[1];
+  qc = qua->q[2];
+  qua->q[0] += (-qb * gx - qc * gy - qua->q[3] * gz);
+  qua->q[1] += (qa * gx + qc * gz - qua->q[3] * gy);
+  qua->q[2] += (qa * gy - qb * gz + qua->q[3] * gx);
+  qua->q[3] += (qa * gz + qb * gy - qc * gx);
 
   // renormalise quaternion
-  recipNorm = 1.0 / sqrt(eul_ang->q[0] * eul_ang->q[0] + eul_ang->q[1] * eul_ang->q[1] + eul_ang->q[2] * eul_ang->q[2] + eul_ang->q[3] * eul_ang->q[3]);
-  eul_ang->q[0] = eul_ang->q[0] * recipNorm;
-  eul_ang->q[1] = eul_ang->q[1] * recipNorm;
-  eul_ang->q[2] = eul_ang->q[2] * recipNorm;
-  eul_ang->q[3] = eul_ang->q[3] * recipNorm;
+  recipNorm = 1.0 / sqrt(qua->q[0] * qua->q[0] + qua->q[1] * qua->q[1] + qua->q[2] * qua->q[2] + qua->q[3] * qua->q[3]);
+  qua->q[0] = qua->q[0] * recipNorm;
+  qua->q[1] = qua->q[1] * recipNorm;
+  qua->q[2] = qua->q[2] * recipNorm;
+  qua->q[3] = qua->q[3] * recipNorm;
 
-  return eul_ang;
+
 }
 
-Quaternion_t *Euler_2_Quaternion(double yaw, double pitch, double roll)
+/*
+void Euler_2_Quaternion(double yaw, double pitch, double roll, double &Q1,
+		double &Q2, double &Q3, double &Q4)
 {
 
-		//Euler_Angles_t *eul_ang = calloc(sizeof (*eul_ang), 1);
-        //Quaternion_t *q = calloc(sizeof (*q), 1);
-		Quaternion_t qua;
-		Quaternion_t *q = &qua;
         double cy,sy,cp,sp,cr,sr;
 
         cy = cos(yaw/2.0);
@@ -100,13 +102,13 @@ Quaternion_t *Euler_2_Quaternion(double yaw, double pitch, double roll)
         cr = cos(roll/2.0);
         sr = sin(roll/2.0);
 
-        q->w = cr * cp * cy + sr * sp * sy;
-        q->x = sr * cp * cy - cr * sp * sy;
-        q->y = cr * sp * cy + sr * cp * sy;
-        q->z = cr * cp * sy - sr * sp * cy;
+        Q1 = cr * cp * cy + sr * sp * sy;
+        Q2 = sr * cp * cy - cr * sp * sy;
+        Q3 = cr * sp * cy + sr * cp * sy;
+        Q4 = cr * cp * sy - sr * sp * cy;
 
-        return q;
 }
+*/
 
 
 
@@ -116,28 +118,71 @@ Quaternion_t *Euler_2_Quaternion(double yaw, double pitch, double roll)
  * q2 -> qy
  * q3 -> qz
  */
-Euler_Angles_t *Quaternion_2_Euler()
+/*
+void Quaternion_2_Euler(Euler_Angles_t *eul_ang, Quaternion_t *quat)
 {
-		Euler_Angles_t eul;
-		Euler_Angles_t *angle = &eul;
+
+		//Quaternion_t *quat;
+
+		//quat = malloc(sizeof(Quaternion_t));
+
+		//Quaternion_t quats;
+
+		
+	//	Euler_Angles_t eul;
+	//	Euler_Angles_t *angle = &eul;
 
         //yaw
-        double sin_yaw = 2.0 * (angle->q[0] * angle->q[1] + angle->q[2] * angle->q[3]);
-        double cos_yaw = 1.0 - 2.0 * (pow(angle->q[1], 2) + pow(angle->q[2], 2));
-        angle->yaw = -atan2(sin_yaw, cos_yaw);
+        double sin_yaw = 2.0 * (quat->q[0] * quat->q[1] + quat->q[2] * quat->q[3]);
+        double cos_yaw = 1.0 - 2.0 * (pow(quat->q[1], 2) + pow(quat->q[2], 2));
+        eul_ang->yaw = -atan2(sin_yaw, cos_yaw);
         
+		//Serial.print("/");
         //pitch
-        double sinp = 2.0 * (angle->q[0] * angle->q[2] - angle->q[3] * angle->q[1]);
+        double sinp = 2.0 * (quat->q[0] * quat->q[2] - quat->q[3] * quat->q[1]);
         //protect against over rotation
         if(abs(sinp) >= 1)
-                angle->pitch = copysign(M_PI/2.0, sinp);
+                eul_ang->pitch = copysign(M_PI/2.0, sinp);
         else
-                angle->pitch = asin(sinp);
+                eul_ang->pitch = asin(sinp);
 
         //roll
-        double sinr = 2.0 * (angle->q[0]* angle->q[1] + angle->q[2] * angle->q[3]);
-        double cosr = 1.0 - 2.0 * (pow(angle->q[1] , 2) + pow(angle->q[2], 2));
-        angle->roll = atan2(sinr,cosr);
+        double sinr = 2.0 * (quat->q[0]* quat->q[1] + quat->q[2] * quat->q[3]);
+        double cosr = 1.0 - 2.0 * (pow(quat->q[1] , 2) + pow(quat->q[2], 2));
+        eul_ang->roll = atan2(sinr,cosr);
+		//Serial.println(quat->q[2]);
+		//Serial.println(eul_ang->roll);
+}
+*/
 
-        return angle;
+
+
+void Quaternion_2_Euler(Euler_Angles_t *eul_ang, Quaternion_t *quat)
+{
+
+		//Quaternion_t *quat;
+
+		//quat = malloc(sizeof(Quaternion_t));
+
+		//Quaternion_t quats;
+
+		
+	//	Euler_Angles_t eul;
+	//	Euler_Angles_t *angle = &eul;
+
+        //yaw
+        eul_ang->yaw = -atan2((quat->q[1] * quat->q[2] + quat->q[0] * quat->q[3]), 
+				0.5 - (pow(quat->q[2],2) + pow(quat->q[3], 2)));
+		eul_ang->yaw *= 180.0 / M_PI;
+		if(eul_ang->yaw < 0)
+			eul_ang->yaw += 360.0;
+        
+        //pitch
+        eul_ang->pitch = asin(2.0 * (quat->q[0] * quat->q[2] - quat->q[1] * quat->q[3]));
+		eul_ang->pitch *= 180.0 / M_PI;
+
+        //roll
+        eul_ang->roll = atan2((quat->q[0] * quat->q[1] + quat->q[2] * quat->q[3]),
+			0.5 - (pow(quat->q[1],2) + pow(quat->q[2],2)));
+		eul_ang->roll *= 180.0 / M_PI;
 }

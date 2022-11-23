@@ -1,3 +1,4 @@
+/*
 #include "accel.h"
 #include "quaternion.h"
 #include "quaternion.cpp"
@@ -84,10 +85,10 @@ void mpu_data_loop()
   Quaternion_2_Euler();
 }
 
-/*
- * detect a change in acceleration 
- * within the y direction
- */
+//
+ //detect a change in acceleration 
+ // within the y direction
+ //
 
 void mpu_data_print()
 {
@@ -103,17 +104,17 @@ void mpu_data_print()
   now_ms = millis();
 
 
-  /*Serial.print("aX = "); Serial.print(mpu.accel_ang_x);
-  Serial.print("ang_aX = "); Serial.print(x);
-  Serial.print(" | ang_aY = "); Serial.print(y);
-  Serial.print(" | aZ = "); Serial.print(((float)z / 16384.0));
+  //Serial.print("aX = "); Serial.print(mpu.accel_ang_x);
+  //Serial.print("ang_aX = "); Serial.print(x);
+  //Serial.print(" | ang_aY = "); Serial.print(y);
+  //Serial.print(" | aZ = "); Serial.print(((float)z / 16384.0));
 
-  Serial.print(" | tmp = "); Serial.print(temperature/340.00+36.53);
+  //Serial.print(" | tmp = "); Serial.print(temperature/340.00+36.53);
 
-  Serial.print(" | gX = "); Serial.print(convert_int16_to_str(gyro_x));
-  Serial.print(" | gY = "); Serial.print(convert_int16_to_str(gyro_y));
-  Serial.print(" | gZ = "); Serial.print(convert_int16_to_str(gyro_z));
-  */
+  //Serial.print(" | gX = "); Serial.print(convert_int16_to_str(gyro_x));
+  //Serial.print(" | gY = "); Serial.print(convert_int16_to_str(gyro_y));
+  //Serial.print(" | gZ = "); Serial.print(convert_int16_to_str(gyro_z));
+  
 
         if(now_ms - last_ms >= print_ms)
         {
@@ -128,3 +129,4 @@ void mpu_data_print()
         }
 }
 
+*/

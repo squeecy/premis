@@ -10,32 +10,27 @@ namespace premisTelemetry
 {
     public class Teensy 
     {
-
-
         static public SerialPort sp = new SerialPort();
-
-        //get device monitor information 
-        /*
-                THIS IS OUR FUCKING PROBLEM FIX THIS SHIT https://stackoverflow.com/questions/49445252/c-sharp-serialport-readline-freezes-my-program
-        static public string serialReceiver()
-        {
-            try 
-            { 
-                return sp.ReadLine();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("No information packets received", "No packets", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                return null;
-            }
-        }
-        */
-
-
         static public bool DeviceConnected = false;
+
+        static private string _TeensyData;
+
+        static private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+
+            //_TeensyData = sp.ReadExisting();
+            Console.WriteLine("Data: " + sp.ReadExisting()); //print information to console
+
+        }
+
+        public string TeensyData
+        {
+            get { return _TeensyData; }
+            set { _TeensyData = value; }
+        }
+
         static public void TeensyInit()
         {
-
             try
             {
                 //connecting our microcontroller 
@@ -43,7 +38,12 @@ namespace premisTelemetry
                 sp.DtrEnable = true;
                 sp.RtsEnable = true;
                 sp.BaudRate = 9600;
+                //reads information
+                sp.DataReceived += new
+                    SerialDataReceivedEventHandler(port_DataReceived);
                 sp.Open();
+
+                _TeensyData=sp.ReadExisting();
                 //true allows gui state to change
                 DeviceConnected = true;
 

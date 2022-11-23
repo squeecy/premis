@@ -53,6 +53,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panel10 = new System.Windows.Forms.Panel();
             this.panel17 = new System.Windows.Forms.Panel();
+            this.test_tel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.State_Panel.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -250,11 +251,21 @@
             this.panel17.Size = new System.Drawing.Size(195, 139);
             this.panel17.TabIndex = 13;
             // 
+            // test_tel
+            // 
+            this.test_tel.AutoSize = true;
+            this.test_tel.Location = new System.Drawing.Point(761, 137);
+            this.test_tel.Name = "test_tel";
+            this.test_tel.Size = new System.Drawing.Size(35, 13);
+            this.test_tel.TabIndex = 14;
+            this.test_tel.Text = "label2";
+            // 
             // stageview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(67)))), ((int)(((byte)(112)))));
+            this.Controls.Add(this.test_tel);
             this.Controls.Add(this.StateTitle);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel4);
@@ -301,5 +312,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.Panel panel17;
+        private System.Windows.Forms.Label test_tel;
     }
 }
