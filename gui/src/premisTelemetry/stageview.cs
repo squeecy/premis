@@ -30,8 +30,6 @@ namespace premisTelemetry
         }
 
 
-
-
         private async void SoftBlink(Control ctrl, Color c1, Color c2, short CycleTime_ms, bool BkClr)
         {
             var sw = new Stopwatch(); sw.Start();
@@ -49,6 +47,25 @@ namespace premisTelemetry
             }
         }
 
+
+        
+        //When receiving data from the port
+        private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            Teensy teensy = new Teensy();
+
+            string test = Teensy.sp.ReadExisting();
+            Console.WriteLine("Data: " + test); //print information to console
+
+            //access form from a thread
+            Invoke(new Action(() =>
+                {
+                    test_tel.Text = test;
+                }));
+        }
+        
+
+
         private void Connect_Button_Click(object sender, EventArgs e)
         {
             Teensy teensy = new Teensy();
@@ -60,6 +77,9 @@ namespace premisTelemetry
                 backGround_Panel.BackColor = Color.Green;
                 StageUpdate_Label.Text = "Connected";
                 test_tel.Text = teensy.TeensyData;
+                Teensy.sp.DataReceived += new
+                    SerialDataReceivedEventHandler(port_DataReceived); //Start information reading
+
             }
 
             if (!Teensy.DeviceConnected)
@@ -69,12 +89,6 @@ namespace premisTelemetry
                 Console.WriteLine("Button has been clicked");
 
             }
-        }
-
-        private void stageview_Load(object sender, EventArgs e)
-        {
-            //temperatureLabel.Text = stdName;
-
         }
     }
 }

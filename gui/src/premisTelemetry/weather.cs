@@ -22,7 +22,6 @@ namespace premisTelemetry
     public class Weather_Metar
     {
         //holds our parsed JSON data and makes it global
-
         static public metarReturn metar_s = new metarReturn();
 
 

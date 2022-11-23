@@ -8,20 +8,13 @@ using System.Windows.Forms;
 
 namespace premisTelemetry
 {
-    public class Teensy 
+    public class Teensy
     {
         static public SerialPort sp = new SerialPort();
         static public bool DeviceConnected = false;
 
         static private string _TeensyData;
 
-        static private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-
-            //_TeensyData = sp.ReadExisting();
-            Console.WriteLine("Data: " + sp.ReadExisting()); //print information to console
-
-        }
 
         public string TeensyData
         {
@@ -38,14 +31,10 @@ namespace premisTelemetry
                 sp.DtrEnable = true;
                 sp.RtsEnable = true;
                 sp.BaudRate = 9600;
-                //reads information
-                sp.DataReceived += new
-                    SerialDataReceivedEventHandler(port_DataReceived);
                 sp.Open();
 
-                _TeensyData=sp.ReadExisting();
-                //true allows gui state to change
-                DeviceConnected = true;
+                _TeensyData = sp.ReadLine();
+                DeviceConnected = true; //true allows gui state to change
 
             }
             /* catches erros */
@@ -61,6 +50,11 @@ namespace premisTelemetry
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        static public void TeensyMonitor()
+        {
+            _TeensyData = sp.ReadLine().ToString();
         }
     }
 }

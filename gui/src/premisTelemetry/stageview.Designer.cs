@@ -275,7 +275,6 @@
             this.Controls.Add(this.panel17);
             this.Name = "stageview";
             this.Size = new System.Drawing.Size(1081, 738);
-            this.Load += new System.EventHandler(this.stageview_Load);
             this.panel1.ResumeLayout(false);
             this.State_Panel.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
