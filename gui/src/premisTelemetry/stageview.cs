@@ -13,12 +13,24 @@ using System.Net.Http;
 
 namespace premisTelemetry
 {
+    public struct Data_Val
+    {
+        static public double eulerYaw { get; set; }
+        static public double eulerPitch { get; set; }
+        static public double eulerRoll { get; set; }
+    }
+
     public partial class stageview : UserControl
     {
 
         public static stageview instance;
         public Label altimeterLabel_p, temperatureLabel_p, dewpointLabel_p, totalwindLabel_p;
         public PictureBox weatherPicBox_p;
+
+        public class Data_Sender
+        {
+        }
+
         public stageview()
         {
             InitializeComponent();
@@ -47,24 +59,37 @@ namespace premisTelemetry
             }
         }
 
-
-        
         //When receiving data from the port
         private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             Teensy teensy = new Teensy();
 
-            string test = Teensy.sp.ReadExisting();
-            Console.WriteLine("Data: " + test); //print information to console
+            string data = Teensy.sp.ReadExisting();
+            Console.WriteLine(data); //print information to console
 
+
+            //stageview stage = new stageview();
             //access form from a thread
             Invoke(new Action(() =>
-                {
-                    test_tel.Text = test;
-                }));
-        }
-        
+            {
+                /* Print Format
+                 *
+                 * Euler Yaw
+                 * Euler Pitch
+                 * Euler Roll
+                 *
+                 */
+                string longData = data.Replace(Environment.NewLine, ","); //put information horrizontally instead of vertically
 
+                //place data into the struct
+                Data_Val.eulerYaw = double.Parse(longData.Split(',')[0]);
+                Data_Val.eulerPitch = double.Parse(longData.Split(',')[1]);
+                Data_Val.eulerRoll = double.Parse(longData.Split(',')[2]);
+
+
+                test_tel.Text = Data_Val.eulerPitch.ToString();
+            }));
+        }
 
         private void Connect_Button_Click(object sender, EventArgs e)
         {
@@ -79,7 +104,6 @@ namespace premisTelemetry
                 test_tel.Text = teensy.TeensyData;
                 Teensy.sp.DataReceived += new
                     SerialDataReceivedEventHandler(port_DataReceived); //Start information reading
-
             }
 
             if (!Teensy.DeviceConnected)

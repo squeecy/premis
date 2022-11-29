@@ -14,10 +14,9 @@ typedef struct
         float yaw, pitch, roll;
 }Euler_Angles_t;
 
-//Euler_Angles_t  *euler_ang = &Euler_Angles_t;
 
 void Mahony_update(float,float,float,float,float,float,float, Quaternion_t *qua); 
-//void Euler_2_Quaternion(double,double,double, double, double, double, double);
-void Quaternion_2_Euler(Euler_Angles_t *eul_ang, Quaternion_t *qua);
+void Euler_2_Quaternion(Euler_Angles_t *eul_ang, Quaternion_t *quat);
+void Quaternion_2_Euler(Euler_Angles_t *eul_ang, Quaternion_t *quat);
 
 #endif

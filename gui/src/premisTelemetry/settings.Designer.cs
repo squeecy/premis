@@ -34,6 +34,7 @@
             this.State_Panel = new System.Windows.Forms.Panel();
             this.METAR_SETTING_Label = new System.Windows.Forms.Label();
             this.backGround_Panel = new System.Windows.Forms.Panel();
+            this.testdata_label = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.State_Panel.SuspendLayout();
             this.SuspendLayout();
@@ -92,11 +93,21 @@
             this.backGround_Panel.Size = new System.Drawing.Size(348, 178);
             this.backGround_Panel.TabIndex = 4;
             // 
+            // testdata_label
+            // 
+            this.testdata_label.AutoSize = true;
+            this.testdata_label.Location = new System.Drawing.Point(623, 240);
+            this.testdata_label.Name = "testdata_label";
+            this.testdata_label.Size = new System.Drawing.Size(35, 13);
+            this.testdata_label.TabIndex = 5;
+            this.testdata_label.Text = "label1";
+            // 
             // settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(67)))), ((int)(((byte)(112)))));
+            this.Controls.Add(this.testdata_label);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.backGround_Panel);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -106,6 +117,7 @@
             this.panel1.PerformLayout();
             this.State_Panel.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -117,5 +129,6 @@
         private System.Windows.Forms.Label METAR_SETTING_Label;
         private System.Windows.Forms.Panel backGround_Panel;
         private System.Windows.Forms.Button metarEnter;
+        private System.Windows.Forms.Label testdata_label;
     }
 }

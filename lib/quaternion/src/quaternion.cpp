@@ -1,14 +1,13 @@
 #include "Arduino.h"
 #include "math.h"
 #include "quaternion.h"
-
-
+#define RAD_TO_DEG 57.295779513082320876798154814105
 
 float Kp = 30.0;
 float Ki = 0.0;
 
 //From https://forum.arduino.cc/t/getting-quaternion-values-from-mpu6050/668823/2
-
+//converts raw data to Quanternions
 void Mahony_update(float ax, float ay, float az, float gx, float gy, float gz, 
                 float deltat, Quaternion_t *qua) 
 {
@@ -88,101 +87,52 @@ void Mahony_update(float ax, float ay, float az, float gx, float gy, float gz,
 
 }
 
-/*
-void Euler_2_Quaternion(double yaw, double pitch, double roll, double &Q1,
-		double &Q2, double &Q3, double &Q4)
+void Euler_2_Quaternion(Euler_Angles_t *eul_ang, Quaternion_t *quat)
 {
 
         double cy,sy,cp,sp,cr,sr;
 
-        cy = cos(yaw/2.0);
-        sy = sin(yaw/2.0);
-        cp = cos(pitch/2.0);
-        sp = sin(pitch/2.0);
-        cr = cos(roll/2.0);
-        sr = sin(roll/2.0);
+        cy = cos(eul_ang->yaw/2.0);
+        sy = sin(eul_ang->yaw/2.0);
+        cp = cos(eul_ang->pitch/2.0);
+        sp = sin(eul_ang->pitch/2.0);
+        cr = cos(eul_ang->roll/2.0);
+        sr = sin(eul_ang->roll/2.0);
 
-        Q1 = cr * cp * cy + sr * sp * sy;
-        Q2 = sr * cp * cy - cr * sp * sy;
-        Q3 = cr * sp * cy + sr * cp * sy;
-        Q4 = cr * cp * sy - sr * sp * cy;
+        quat->q[0] = cr * cp * cy + sr * sp * sy;
+        quat->q[1] = sr * cp * cy - cr * sp * sy;
+        quat->q[2] = cr * sp * cy + sr * cp * sy;
+        quat->q[3] = cr * cp * sy - sr * sp * cy;
 
 }
-*/
 
-
-
-/*
- * q0 -> qw
- * q1 -> qx
- * q2 -> qy
- * q3 -> qz
- */
-/*
 void Quaternion_2_Euler(Euler_Angles_t *eul_ang, Quaternion_t *quat)
 {
-
-		//Quaternion_t *quat;
-
-		//quat = malloc(sizeof(Quaternion_t));
-
-		//Quaternion_t quats;
-
-		
-	//	Euler_Angles_t eul;
-	//	Euler_Angles_t *angle = &eul;
+		/*
+		q.w = q[0] 
+		q.x = q[1]
+		q.y = q[2]
+		q.z = q[3]
+		*/
 
         //yaw
-        double sin_yaw = 2.0 * (quat->q[0] * quat->q[1] + quat->q[2] * quat->q[3]);
-        double cos_yaw = 1.0 - 2.0 * (pow(quat->q[1], 2) + pow(quat->q[2], 2));
-        eul_ang->yaw = -atan2(sin_yaw, cos_yaw);
+        double sin_yaw = 2.0 * (quat->q[0] * quat->q[3] + quat->q[1] * quat->q[2]);
+        double cos_yaw = 1.0 - 2.0 * (pow(quat->q[2], 2) + pow(quat->q[3], 2));
+        eul_ang->yaw = atan2(sin_yaw, cos_yaw) * RAD_TO_DEG;
         
-		//Serial.print("/");
         //pitch
         double sinp = 2.0 * (quat->q[0] * quat->q[2] - quat->q[3] * quat->q[1]);
         //protect against over rotation
         if(abs(sinp) >= 1)
-                eul_ang->pitch = copysign(M_PI/2.0, sinp);
-        else
-                eul_ang->pitch = asin(sinp);
+                eul_ang->pitch = 90.0;
+        else if(abs(sinp) <= -1.0)
+                eul_ang->pitch = -90.0;
+		else
+			eul_ang->pitch = asin(sinp) * RAD_TO_DEG;
 
         //roll
         double sinr = 2.0 * (quat->q[0]* quat->q[1] + quat->q[2] * quat->q[3]);
         double cosr = 1.0 - 2.0 * (pow(quat->q[1] , 2) + pow(quat->q[2], 2));
-        eul_ang->roll = atan2(sinr,cosr);
-		//Serial.println(quat->q[2]);
-		//Serial.println(eul_ang->roll);
-}
-*/
+        eul_ang->roll = atan2(sinr,cosr) * RAD_TO_DEG;
 
-
-
-void Quaternion_2_Euler(Euler_Angles_t *eul_ang, Quaternion_t *quat)
-{
-
-		//Quaternion_t *quat;
-
-		//quat = malloc(sizeof(Quaternion_t));
-
-		//Quaternion_t quats;
-
-		
-	//	Euler_Angles_t eul;
-	//	Euler_Angles_t *angle = &eul;
-
-        //yaw
-        eul_ang->yaw = -atan2((quat->q[1] * quat->q[2] + quat->q[0] * quat->q[3]), 
-				0.5 - (pow(quat->q[2],2) + pow(quat->q[3], 2)));
-		eul_ang->yaw *= 180.0 / M_PI;
-		if(eul_ang->yaw < 0)
-			eul_ang->yaw += 360.0;
-        
-        //pitch
-        eul_ang->pitch = asin(2.0 * (quat->q[0] * quat->q[2] - quat->q[1] * quat->q[3]));
-		eul_ang->pitch *= 180.0 / M_PI;
-
-        //roll
-        eul_ang->roll = atan2((quat->q[0] * quat->q[1] + quat->q[2] * quat->q[3]),
-			0.5 - (pow(quat->q[1],2) + pow(quat->q[2],2)));
-		eul_ang->roll *= 180.0 / M_PI;
 }
