@@ -1,23 +1,31 @@
 #include "Arduino.h"
 #include "math.h"
 #include "quaternion.h"
-#define RAD_TO_DEG 57.295779513082320876798154814105
+#define RAD_TO_DEG 57.295779513082320876798154814105  // 180/PI
 
-float Kp = 30.0;
-float Ki = 0.0;
 
-//From https://forum.arduino.cc/t/getting-quaternion-values-from-mpu6050/668823/2
-//converts raw data to Quanternions
+/*
+ * credit https://forum.arduino.cc/t/getting-quaternion-values-from-mpu6050/668823/2
+ *
+ * Converts raw IMU data to Quanternion data
+ *
+ * respected accelerometer
+ * @param ax
+ * @param ay
+ * @param az
+ *
+ * respected gyroscope
+ * @param gx
+ * @param gy
+ * @param gz
+ * @param dt change in time
+ * @param *qua Quaternion_t struct
+ *
+ * @note returns to Quaternion_t struct
+ */
 void Mahony_update(float ax, float ay, float az, float gx, float gy, float gz, 
                 float deltat, Quaternion_t *qua) 
 {
-  //eul_ang = (struct Euler_Angles_t*)
-	  //malloc(sizeof(struct Euler_Angles_t));
-
-  //Euler_Angles_t *eul_ang = calloc(sizeof (*eul_ang), 1);
-  //Euler_Angles_t eul;
-
-  //Euler_Angles_t *eul_ang = &eul;
 
   float recipNorm;
   float vx, vy, vz;
@@ -25,6 +33,8 @@ void Mahony_update(float ax, float ay, float az, float gx, float gy, float gz,
   float qa, qb, qc;
   static float ix = 0.0, iy = 0.0, iz = 0.0;  //integral feedback terms
   float tmp;
+  float Kp = 30.0;
+  float Ki = 0.0;
 
   //Serial.println(deltat);
   // Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
@@ -87,6 +97,14 @@ void Mahony_update(float ax, float ay, float az, float gx, float gy, float gz,
 
 }
 
+/*
+ * Converts Euler Angle to Quaternion
+ *
+ * @param *eul_ang Euler_Angles_t struct
+ * @param *quat Quaternion_t struct
+ * 
+ * @note returns to Quaternion_t struct
+ */
 void Euler_2_Quaternion(Euler_Angles_t *eul_ang, Quaternion_t *quat)
 {
 
@@ -106,6 +124,14 @@ void Euler_2_Quaternion(Euler_Angles_t *eul_ang, Quaternion_t *quat)
 
 }
 
+/*
+ * Converts Quaternion to Euler Angle (Yaw Pitch Roll)
+ *
+ * @param *eul_ang Euler_Angles_t struct
+ * @param *quat Quaternion_t struct
+ *
+ * @note returns to eul_ang struct
+ */
 void Quaternion_2_Euler(Euler_Angles_t *eul_ang, Quaternion_t *quat)
 {
 		/*
@@ -134,5 +160,7 @@ void Quaternion_2_Euler(Euler_Angles_t *eul_ang, Quaternion_t *quat)
         double sinr = 2.0 * (quat->q[0]* quat->q[1] + quat->q[2] * quat->q[3]);
         double cosr = 1.0 - 2.0 * (pow(quat->q[1] , 2) + pow(quat->q[2], 2));
         eul_ang->roll = atan2(sinr,cosr) * RAD_TO_DEG;
+
+
 
 }

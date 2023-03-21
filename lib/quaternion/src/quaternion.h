@@ -10,8 +10,9 @@ typedef struct
 
 typedef struct 
 {
-
-        float yaw, pitch, roll;
+		float yaw;
+		float pitch;
+		float roll;
 }Euler_Angles_t;
 
 

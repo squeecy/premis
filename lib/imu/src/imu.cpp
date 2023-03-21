@@ -1,10 +1,13 @@
 #include <Wire.h>
 #include <accel.h>
-#include <quaternion.h>
+#include <kalman.h>
+#include <pid.h>
+
 
 #define gscale ((250./32768.0) * (M_PI/180.0))
-float A_cal[6] = {265.0, -80.0, -700.0, 0.994, 1.000, 1.014};
-float G_off[3] = {-499.5, -17.7, -82.0};
+
+const float A_cal[6] = {265.0, -80.0, -700.0, 0.994, 1.000, 1.014};
+const float G_off[3] = {-499.5, -17.7, -82.0};
 
 const int MPU_ADR = 0x68; // MPU6050 I2C address
 
@@ -15,27 +18,29 @@ float roll, pitch, yaw;
 float AccErrorX, AccErrorY, GyroErrorX, GyroErrorY, GyroErrorZ;
 
 unsigned long now_ms, last_ms = 0;
-float oldTime = 0;
 int c = 0;
 
-float Axyz[3];
-float Gxyz[3];
-
-//initialize MPU6050
+/*
+ * Configure IMU for use
+ */
 void configure() {
 
   Wire.begin(); //Initialize comunication
-  Serial.begin(9600); //Serial information printing to 9600 
+  Serial.begin(115200); //Serial information printing to 9600 
+  Wire.setClock( 400000L);
   Wire.beginTransmission(MPU_ADR); // Start communication with MPU6050 // MPU=0x68
-  Wire.write(0x6B); // Talk to the register 6B
+  Wire.write(MPU_ADR); // Talk to the register 6B
   Wire.write(0); // Make reset - place a 0 into the 6B register
   Wire.endTransmission(true); //end the transmission
 }
 
 
-//capture MPU6050 raw values
-//@Param1 struct MPU_T
-void mpu_raw_data(mpu_T *mpu_s)
+/*
+ * Captures raw IMU 6-axis data
+ *
+ * @param *mpu_s MPU_T struct
+ */
+void mpu_raw_data(mpu_t *mpu)
 {
   //initialize for reading data
   Wire.beginTransmission(MPU_ADR);
@@ -45,18 +50,18 @@ void mpu_raw_data(mpu_T *mpu_s)
 
   //read raw MPU
   int t = Wire.read() << 8;
-  mpu_s->ax = t | Wire.read(); // X-axis value
+  mpu->ax = t | Wire.read(); // X-axis value
   t = Wire.read() << 8;
-  mpu_s->ay = t | Wire.read(); // Y-axis value
+  mpu->ay = t | Wire.read(); // Y-axis value
   t = Wire.read() << 8;
-  mpu_s->az = t | Wire.read(); // Z-axis value
+  mpu->az = t | Wire.read(); // Z-axis value
   t = Wire.read() << 8;
 
-  mpu_s->gx = t | Wire.read(); // For a 250deg/s range we have to divide first the raw value by 131.0, according to the datasheet
+  mpu->gx = t | Wire.read(); // For a 250deg/s range we have to divide first the raw value by 131.0, according to the datasheet
   t = Wire.read() << 8;
-  mpu_s->gy = t | Wire.read();
+  mpu->gy = t | Wire.read();
   t = Wire.read() << 8;
-  mpu_s->gz = t | Wire.read();
+  mpu->gz = t | Wire.read();
   
   
   //set raw mpu data to array 
@@ -64,9 +69,16 @@ void mpu_raw_data(mpu_T *mpu_s)
 
   //The MPU6050 will be positioned vertically, so we change the orientation of 
   //the raw data. y = inverse(Z) , Z = Y
-  Axyz[0] = (float) mpu_s->ax;
-  Axyz[1] = (float) -mpu_s->az; 
-  Axyz[2] = (float) mpu_s->ay;
+  Axyz[0] = (float) mpu->ax;
+  Axyz[1] = (float) -mpu->az; 
+  Axyz[2] = (float) mpu->ay;
+
+
+  //testing raw values
+  Axyz_t[0] = (float) (mpu->ax) / 16384.0;
+  Axyz_t[1] = (float) (-mpu->az) / 16384.0; 
+  Axyz_t[2] = (float) (mpu->ay) / 16384.0;
+
 
   //apply offests and scale factors from Magneto
   for (int i = 0; i < 3; i++)
@@ -74,41 +86,95 @@ void mpu_raw_data(mpu_T *mpu_s)
 	  Axyz[i] = (Axyz[i] - A_cal[i]) * A_cal[i + 3];
   }
 
-  Gxyz[0] = ((float) mpu_s->gx - G_off[0]) * gscale;
-  Gxyz[1] = ((float) mpu_s->gy - G_off[1]) * gscale;
-  Gxyz[2] = ((float) mpu_s->gz - G_off[2]) * gscale;
+  Gxyz[0] = (((float) mpu->gx - G_off[0]) * gscale) / FREQ;
+  Gxyz[1] = (((float) mpu->gy - G_off[1]) * gscale) / FREQ;
+  Gxyz[2] = (((float) mpu->gz - G_off[2]) * gscale) / FREQ;
 }
 
-//Converts MPU data
+/*
+ * Converts raw IMU data to Quanternions and prints to serial port
+ */
 void mpu_loop() 
 {
+  Quaternion_t quat;
+  mpu_t mpu;
+  Euler_Angles_t eul;
+  PIDController pid_pitch;
+  PIDController pid_roll;
+  pidInit(&pid_pitch);
+  pidInit(&pid_roll);
+
+  bool hasran = false;
+  now_ms = millis();
 
   static float deltat = 0;
   static unsigned long now = 0, last = 0;
+  float roll_f, pitch_f = 0;
 
-  Quaternion_t quat;
-  mpu_T mpu_s;
-  Euler_Angles_t eul;
-
-
-  mpu_raw_data(&mpu_s);
+  if (now_ms - last_ms >= FREQ)
+  {
 
 
-  now = micros();
-  d_t = (now - last) * 1.0e-6; //change in time
-  last = now;
 
-  Mahony_update(Axyz[0], Axyz[1], Axyz[2], Gxyz[0], Gxyz[1], Gxyz[2], d_t,
-		  &quat); //Convert raw values to Quanternion values
+	  mpu_raw_data(&mpu);
 
-  Quaternion_2_Euler(&eul, &quat); //Convert Quanternion values to yaw, pitch roll
 
-  
-  //print serial data
-  Serial.println(eul.yaw);
-  Serial.println(eul.pitch);
-  Serial.println(eul.roll);
- 
+	  now = micros();
+	  d_t = (now - last) * 1.0e-6; //change in time
+	  last = now;
+
+	  Mahony_update(kalman(Axyz[0]), kalman(Axyz[1]), kalman(Axyz[2]), kalman(Gxyz[0]), kalman(Gxyz[1]), kalman(Gxyz[2]), d_t,
+			  &quat); //Convert raw values to Quanternion values
+
+	  Quaternion_2_Euler(&eul, &quat); //Convert Quanternion values to yaw, pitch roll
+
+	  float last_i;
+	  float roll_t;
+
+	  if(hasran == false)
+	  {
+		roll_t = eul.roll * 3.09;
+		hasran = true;
+	  }
+
+	  float roll = eul.roll;
+	  float pitch = eul.pitch;
+
+
+	  roll_f = (0.94f * roll_t) + (0.06f * (roll * 3.09f)); //3.09
+	  pitch_f = (0.94f * pitch_f) + (0.06f * (pitch * 3.09f)); //3.09
+
+	  roll_t = roll_f;
+
+	  pidUpdate(&pid_pitch, eul.pitch, 0.0f);
+	  pidUpdate(&pid_roll, eul.roll, 0.0f);
+
+	  float g = 0;
+	  g = 0.9 * g + 0.1 * eul.pitch;
+
+
+	  //print serial data
+	  //char buffer[80];
+	  int num_data = 0;
+	  int size = 80;
+	  //char buffer[];
+
+	  char *buffer = malloc(sizeof(float) * size);
+
+	  if(num_data == size)
+	  {
+		  size *= 2;
+		  buffer = realloc(buffer, sizeof(float) * size);
+	  }
+
+	  sprintf(buffer, "%.3f,%.2f,%.2f,%.3f,%.4f", eul.yaw, 
+			    eul.roll * 3.42, eul.pitch * 3.6 ,dt);
+
+  	  Serial.println(buffer);
+	  num_data++;
+      free(buffer);
+	  last_ms = now_ms;
+  }
 }
 
 void calculate_IMU_error() {

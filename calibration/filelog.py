@@ -7,9 +7,6 @@ from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 import pandas
 import os
-matplotlib.use("tkAgg")
-import matplotlib.pyplot as plt
-import numpy as np
 
 SERIAL_PORT = 'COM3';
 FILE_PATH = os.path.join(os.getcwd(),'raw_values.txt');
